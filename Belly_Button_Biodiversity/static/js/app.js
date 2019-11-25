@@ -1,29 +1,68 @@
 function buildMetadata(sample) {
 
-  // @TODO: Complete the following function that builds the metadata panel
+  var URL = `/metadata/${sample}`;
+  var selectMetaData = d3.select("#sample-metadata");
 
-  // Use `d3.json` to fetch the metadata for a sample
-    // Use d3 to select the panel with id of `#sample-metadata`
+  d3.json(URL).then((sampleMetaData) => {
+    selectMetaData.html("");     
+    Object.entries(sampleMetaData).forEach(([key,value]) => {
+      selectMetaData
+        .append("p")
+        .append("text")
+        .text(`${key}: ${value}`)
+    });
+  });
 
-    // Use `.html("") to clear any existing metadata
-
-    // Use `Object.entries` to add each key and value pair to the panel
-    // Hint: Inside the loop, you will need to use d3 to append new
-    // tags for each key-value in the metadata.
-
-    // BONUS: Build the Gauge Chart
-    // buildGauge(data.WFREQ);
 }
+
+// BONUS: Build the Gauge Chart
+// buildGauge(data.WFREQ);
+
 
 function buildCharts(sample) {
 
-  // @TODO: Use `d3.json` to fetch the sample data for the plots
+  var URL = `/samples/${sample}`;
+  var selectPieData = d3.select("#pie");
+  var selectBubbleData = d3.select("#bubble");
+  var selectGaugeData = d3.select("#gauge");
 
-    // @TODO: Build a Bubble Chart using the sample data
+  // Build Charts
+  d3.json(URL).then((sampleData) => {
 
-    // @TODO: Build a Pie Chart
-    // HINT: You will need to use slice() to grab the top 10 sample_values,
-    // otu_ids, and labels (10 each).
+    // selectPieData.html("");     
+    // selectBubbleData.html("");     
+    // selectGaugeData.html("");     
+    var dataPie = [{
+      "labels": sampleData["otu_ids"].slice(0,10),
+      "values": sampleData["sample_values"].slice(0,10),
+      "hovertext": sampleData["otu_labels"].slice(0,10),
+      "type": "pie"
+    }];
+
+    var pieLayout = [{
+      overwrite: true,
+      showlegend: true
+    }];
+
+    Plotly.plot("pie", dataPie, pieLayout);
+
+    var traceBubble = {
+      x: sampleData["otu_ids"],
+      y: sampleData["sample_values"],
+      text: sampleData["otu_labels"],
+      mode: 'markers',
+      marker: {
+        size: sampleData["sample_values"],
+        color: sampleData["otu_ids"]
+      }
+    };
+    
+    var dataBubble = [traceBubble];
+ 
+    Plotly.plot('bubble', dataBubble);
+
+  });
+
 }
 
 function init() {
@@ -48,8 +87,8 @@ function init() {
 
 function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
-  buildCharts(newSample);
   buildMetadata(newSample);
+  buildCharts(newSample);
 }
 
 // Initialize the dashboard
