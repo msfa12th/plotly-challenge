@@ -29,8 +29,8 @@ function buildCharts(sample) {
   // Build Charts
   d3.json(URL).then((sampleData) => {
 
-    // selectPieData.html("");     
-    // selectBubbleData.html("");     
+    // selectPieData.selectAll("*").remove();
+    // selectBubbleData.selectAll("*").remove();
     // selectGaugeData.html("");     
     var dataPie = [{
       "labels": sampleData["otu_ids"].slice(0,10),
@@ -38,13 +38,14 @@ function buildCharts(sample) {
       "hovertext": sampleData["otu_labels"].slice(0,10),
       "type": "pie"
     }];
+console.log(sampleData["otu_ids"].slice(0,10));
+    // var pieLayout = [{
+    //   overwrite: true,
+    //   showlegend: false
+    // }];
 
-    var pieLayout = [{
-      overwrite: true,
-      showlegend: true
-    }];
-
-    Plotly.plot("pie", dataPie, pieLayout);
+    // Plotly.plot("pie", dataPie, pieLayout);
+    Plotly.plot("pie", dataPie);
 
     var traceBubble = {
       x: sampleData["otu_ids"],
@@ -55,6 +56,13 @@ function buildCharts(sample) {
         size: sampleData["sample_values"],
         color: sampleData["otu_ids"]
       }
+    };
+
+    var layoutBubble = {
+      title: 'Bubble Chart Size Scaling',
+      showlegend: false,
+      height: 600,
+      width: 600
     };
     
     var dataBubble = [traceBubble];
