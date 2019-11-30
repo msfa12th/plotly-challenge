@@ -12,41 +12,33 @@ function buildMetadata(sample) {
         .text(`${key}: ${value}`)
     });
   });
-
 }
-
-// BONUS: Build the Gauge Chart
-// buildGauge(data.WFREQ);
 
 
 function buildCharts(sample) {
 
   var URL = `/samples/${sample}`;
-  var selectPieData = d3.select("#pie");
-  var selectBubbleData = d3.select("#bubble");
-  var selectGaugeData = d3.select("#gauge");
 
-  // Build Charts
   d3.json(URL).then((sampleData) => {
 
-    // selectPieData.selectAll("*").remove();
-    // selectBubbleData.selectAll("*").remove();
-    // selectGaugeData.html("");     
+  // BUILD PIE CHART
     var dataPie = [{
       "labels": sampleData["otu_ids"].slice(0,10),
       "values": sampleData["sample_values"].slice(0,10),
       "hovertext": sampleData["otu_labels"].slice(0,10),
       "type": "pie"
     }];
-console.log(sampleData["otu_ids"].slice(0,10));
-    // var pieLayout = [{
-    //   overwrite: true,
-    //   showlegend: false
-    // }];
 
-    // Plotly.plot("pie", dataPie, pieLayout);
-    Plotly.plot("pie", dataPie);
+    var layoutPie = {
+      autosize: true,
+      width: 400,
+      height: 400,
+      margin: { l: 0, r: 0, t:0, b:0}
+    };
+    
+    Plotly.newPlot("pie", dataPie, layoutPie);
 
+  // BUILD BUBBLE CHART
     var traceBubble = {
       x: sampleData["otu_ids"],
       y: sampleData["sample_values"],
@@ -59,19 +51,23 @@ console.log(sampleData["otu_ids"].slice(0,10));
     };
 
     var layoutBubble = {
-      title: 'Bubble Chart Size Scaling',
-      showlegend: false,
-      height: 600,
-      width: 600
+        xaxis: {
+          title: {
+            text: "OTU_IDS"
+          }},
+        height: 500,
+        width: 1200
     };
     
     var dataBubble = [traceBubble];
  
-    Plotly.plot('bubble', dataBubble);
+    Plotly.newPlot('bubble', dataBubble,layoutBubble);
 
   });
 
 }
+
+
 
 function init() {
   // Grab a reference to the dropdown select element
@@ -88,8 +84,10 @@ function init() {
 
     // Use the first sample from the list to build the initial plots
     const firstSample = sampleNames[0];
+
     buildCharts(firstSample);
     buildMetadata(firstSample);
+    buildGauge(firstSample);
   });
 }
 
@@ -97,6 +95,7 @@ function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
   buildMetadata(newSample);
   buildCharts(newSample);
+  buildGauge(newSample);
 }
 
 // Initialize the dashboard
