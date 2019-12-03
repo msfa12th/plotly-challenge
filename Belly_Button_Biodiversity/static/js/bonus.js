@@ -1,50 +1,4 @@
 // BONUS: Build the Gauge Chart
-function buildGauge2(sample) {
-    var URL = `/metadata/${sample}`;
-
-    var mySteps = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9]];
-    // var stepColor = ["#F7F2EB","#F3F0E3" ,"#E8E6C7" , "#E4E9AB" , "#D4E590" , "#B6CD87",
-    //                     "#84BF7C" ,"#82BC88" ,"#7DB482" ];
-    
-    d3.json(URL).then((sampleData) => {
-      var data = [
-        {
-          domain: { x: [0, 1], y: [0, 1] },
-          gauge: { 
-                axis: { range: [null, 9]
-                        // nticks: 8,
-                        // text: "Scrubs Per Week",
-                        // borderwidth: 10
-                    },
-                bar: { color: "floralwhite" },
-
-           
-            
-                steps: [ 
-                    { range: [0,1], color: "#F7F2EB" },
-                    { range: [1,2], color: "#F3F0E3" },
-                    { range: [2,3], color: "#E8E6C7" },
-                    { range: [3,4], color: "#E4E9AB" },
-                    { range: [4,5], color: "#D4E590" },
-                    { range: [5,6], color: "#B6CD87" },
-                    { range: [6,7], color: "#84BF7C" },
-                    { range: [7,8], color: "#82BC88" },
-                    { range: [8,9], color: "#7DB482" }
-                ]
-            },
-          value: sampleData["WFREQ"],
-          title: { text: "Belly Button Washing Frequency"},
-
-          type: "indicator",
-          mode: "gauge"
-        }
-      ];
-
-      var layout = { width: 300, height: 500, margin: { t: 20, b: 20 } };
-      
-      Plotly.newPlot('gauge', data, layout);
-    });
-  }
 
   function buildGauge(sample) {
     var URL = `/metadata/${sample}`;
@@ -56,8 +10,7 @@ function buildGauge2(sample) {
 
         // Trig to calc meter point
         var degrees = 180-(level)*20 ;
-        alert(degrees);
-            radius = .5;
+        var radius = 0.5;
         var radians = degrees * Math.PI / 180;
         var x = radius * Math.cos(radians);
         var y = radius * Math.sin(radians);

@@ -85,8 +85,8 @@ function init() {
     // Use the first sample from the list to build the initial plots
     const firstSample = sampleNames[0];
 
-    buildCharts(firstSample);
     buildMetadata(firstSample);
+    buildCharts(firstSample);
     buildGauge(firstSample);
   });
 }
