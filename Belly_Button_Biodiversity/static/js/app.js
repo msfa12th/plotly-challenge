@@ -54,9 +54,7 @@ function buildCharts(sample) {
         xaxis: {
           title: {
             text: "OTU_IDS"
-          }},
-        height: 500,
-        width: 1200
+          }}
     };
     
     var dataBubble = [traceBubble];
